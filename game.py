@@ -54,6 +54,9 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 simulate = not simulate
+            elif event.key == pygame.K_r:
+                grid = np.zeros((ROWS, COLS), dtype=bool)
+                simulate = False
 
     if simulate:
         grid = update_grid(grid)

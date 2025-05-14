@@ -39,7 +39,13 @@ def update_grid(grid):
     new_grid = np.copy(grid)
     for row in range(ROWS):
         for col in range(COLS):
-            neighbours = np.sum(grid[max(row-1, 0):min(row+2, ROWS), max(col-1, 0):min(col+2, COLS)]) - grid[row, col]
+            neighbours = 0
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == 0 and j == 0:
+                        continue
+
+                    neighbours += grid[(row + i) % ROWS, (col + j) % COLS]
 
             if grid[row, col] and (neighbours < 2 or neighbours > 3):
                 new_grid[row, col] = False

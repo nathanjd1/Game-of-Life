@@ -1,12 +1,24 @@
 import pygame
 import numpy as np
 
+# Get screen info
+pygame.init()
+screen_info = pygame.display.Info()
+screen_height = screen_info.current_h
+print(screen_height)
+
 # Config
-WIDTH, HEIGHT = 600, 600
+SCREEN_PERCENTAGE = 0.9
+HEIGHT = int(screen_height * SCREEN_PERCENTAGE)
+WIDTH = HEIGHT
 ROWS, COLS = 50, 50
 CELL_SIZE = WIDTH // COLS
 
-pygame.init()
+# Recalculate width and height
+WIDTH = COLS * CELL_SIZE
+HEIGHT = ROWS * CELL_SIZE
+
+# Initialize display
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Conway's Game of Life")
 clock = pygame.time.Clock()
@@ -50,7 +62,8 @@ while running:
             x, y = event.pos
             col = x // CELL_SIZE
             row = y // CELL_SIZE
-            grid[row, col] = not grid[row, col]
+            if 0 <= col < COLS and 0 <= row < ROWS:
+                grid[row, col] = not grid[row, col]
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:

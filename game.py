@@ -28,6 +28,7 @@ grid = np.zeros((ROWS, COLS), dtype=bool)
 running = True
 simulate = False
 speedup = False
+drawing_type = 0 # 0 = none, 1 = alive, 2 = dead
 
 def draw_grid():
     for row in range(ROWS):
@@ -58,18 +59,33 @@ while running:
     screen.fill((200, 200, 200))
     draw_grid()
     pygame.display.flip()
-    clock.tick(30 if speedup else 10)
+    clock.tick(60 if not simulate else (30 if speedup else 10))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN and not simulate:
-            x, y = event.pos
-            col = x // CELL_SIZE
-            row = y // CELL_SIZE
-            if 0 <= col < COLS and 0 <= row < ROWS:
-                grid[row, col] = not grid[row, col]
+            if event.button == 1:
+                x, y = event.pos
+                col = x // CELL_SIZE
+                row = y // CELL_SIZE
+                if 0 <= col < COLS and 0 <= row < ROWS:
+                    drawing_type = 2 if grid[row, col] else 1 # Set drawing type; 1 = alive, 2 = dead
+                    grid[row, col] = not grid[row, col]
+
+        elif event.type == pygame.MOUSEBUTTONUP and not simulate:
+            if event.button == 1:
+                drawing_type = 0
+
+        elif event.type == pygame.MOUSEMOTION and not simulate:
+            if drawing_type:
+                x, y = event.pos
+                col = x // CELL_SIZE
+                row = y // CELL_SIZE
+                if 0 <= col < COLS and 0 <= row < ROWS:
+                    if (drawing_type == 1 and not grid[row, col]) or (drawing_type == 2 and grid[row, col]):
+                        grid[row, col] = not grid[row, col]
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:

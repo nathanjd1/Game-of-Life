@@ -15,6 +15,7 @@ grid = np.zeros((ROWS, COLS), dtype=bool)
 
 running = True
 simulate = False
+speedup = False
 
 def draw_grid():
     for row in range(ROWS):
@@ -39,7 +40,7 @@ while running:
     screen.fill((200, 200, 200))
     draw_grid()
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(30 if speedup else 10)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -57,6 +58,12 @@ while running:
             elif event.key == pygame.K_r:
                 grid = np.zeros((ROWS, COLS), dtype=bool)
                 simulate = False
+            elif event.key == pygame.K_LSHIFT:
+                speedup = True
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_LSHIFT:
+                speedup = False
 
     if simulate:
         grid = update_grid(grid)
